@@ -1,6 +1,7 @@
 {
-  "short_name": "Arkade",
-  "name": "Arkade",
+  "short_name": "Purple Arkade",
+  "name": "Purple Arkade Wallet",
+  "description": "Bitcoin on Nostr with native Arkade Zaps",
   "icons": [
     {
       "src": "favicon.ico",
@@ -26,8 +27,8 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
+  "theme_color": "#7C3AED",
+  "background_color": "#1E1B4B",
   "protocol_handlers": [
     {
       "protocol": "web+arkade",

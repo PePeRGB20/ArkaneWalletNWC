@@ -1,20 +1,127 @@
-# 👾 Arkade Wallet
+# 💜 Purple Arkade Wallet
 
-Arkade Wallet is the entry-point to the Arkade ecosystem—a self-custodial Bitcoin wallet delivered as a lightweight Progressive Web App (installable on mobile or desktop in seconds, no app-store gatekeepers). Built around the open-source ARK protocol, it speaks natively to any [arkd](https://github.com/arkade-os/arkd) instance, letting you create, send, and receive Virtual Transaction Outputs (VTXOs) for instant, off-chain pre-confirmations and batched, fee-efficient on-chain settlement.
+**Bitcoin on Nostr with native Arkade Zaps**
 
-## Screenshots
+Purple Arkade Wallet is a fork of [Arkade Wallet](https://github.com/arkade-os/wallet) with integrated **Nostr Wallet Connect (NIP-47)** support, enabling native Arkade vtxo payments via Nostr without Lightning.
 
-<!-- Using a table for more consistent layout -->
-<table>
-  <tr>
-    <td width="50%" align="center">
-      <img src="./mockup/new-wallet.png" alt="New Wallet" width="250">
-    </td>
-    <td width="50%" align="center">
-      <img src="./mockup/home-arkade-wallet.png" alt="Home Screen" width="250">
-    </td>
-  </tr>
-</table>
+## ✨ Features
+
+### Arkade Wallet Core
+- ✅ **Non-custodial Bitcoin wallet** with Arkade vtxos
+- ✅ Instant, private off-chain transfers
+- ✅ On-chain compatibility
+- ✅ Atomic swaps via Boltz
+- ✅ DLC lending integration
+
+### 💜 Purple Edition - Nostr Integration
+- ✅ **NIP-47 Nostr Wallet Connect** server
+- ✅ **Native Arkade Zaps** - Send vtxos via Nostr
+- ✅ **No Lightning required** - Direct Arkade address payments
+- ✅ QR code pairing with Nostr apps
+- ✅ Multi-relay support (relay.damus.io, nos.lol, relay.primal.net)
+- ✅ Connection management UI
+- ✅ Compatible with Nostr clients (tested with jumble)
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js v18+
+- npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/PePeRGB20/ArkaneWalletNWC.git
+cd ArkaneWalletNWC
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Start development server
+npm start
+```
+
+### Using Arkade Zaps
+
+1. Open Purple Arkade Wallet
+2. Go to **Settings > Wallet Connect**
+3. Scan the QR code with your Nostr app (e.g., jumble)
+4. Send a zap - it will use Arkade vtxos instead of Lightning!
+
+## 🏗️ Architecture
+
+### NWC Server
+The wallet runs a NIP-47 compliant server that:
+- Publishes kind 13194 wallet info events
+- Listens for kind 23194 payment requests
+- Responds with kind 23195 payment responses
+- Supports methods: `pay_invoice`, `get_balance`, `get_info`, `make_invoice`
+
+### Arkade Zaps Flow
+1. Nostr app requests payment via NWC
+2. Purple Arkade Wallet receives Arkade address
+3. Wallet sends vtxos directly (no Lightning!)
+4. Transaction confirmed on Arkade network
+
+## 📁 Project Structure
+
+```
+src/
+├── nwc/                    # Nostr Wallet Connect implementation
+│   ├── server.ts           # NIP-47 server
+│   ├── pairing.ts          # QR code & pairing logic
+│   ├── storage.ts          # Connection persistence
+│   └── README.md           # NWC documentation
+├── providers/
+│   └── nwc.tsx             # React context for NWC
+└── screens/Settings/
+    └── WalletConnect.tsx   # Connection management UI
+```
+
+## 🎨 Branding
+
+Purple Arkade Wallet uses **violet/purple** as the dominant color to align with the Nostr ecosystem and nostriches community.
+
+**Colors:**
+- Primary: `#7C3AED` (Vibrant Violet)
+- Background: `#1E1B4B` (Deep Purple)
+- Accent: Purple variations
+
+## 🔧 Development
+
+### Key Technologies
+- React + TypeScript
+- Ionic Framework
+- @arkade-os/sdk (Arkade network)
+- nostr-tools (Nostr protocol)
+- Vite
+
+### Build Commands
+```bash
+npm run build          # Production build
+npm run build:worker   # Build service worker
+npm start              # Development server
+```
+
+## 🧪 Testing
+
+Tested and working with:
+- [jumble](https://jumble.social) - Nostr client
+- Successful 42 sat zap transfer confirmed
+
+## 📝 NIP-47 Implementation
+
+Purple Arkade Wallet implements NIP-47 with Arkade-specific adaptations:
+
+| NIP-47 Field | Arkade Implementation |
+|--------------|----------------------|
+| `invoice` | Arkade address (ark1...) |
+| `amount` | Millisats → Sats conversion |
+| `preimage` | vtxo transaction ID |
 
 ## Environment Variables
 
@@ -26,72 +133,39 @@ Arkade Wallet is the entry-point to the Arkade ecosystem—a self-custodial Bitc
 | `VITE_SENTRY_DSN`           | Enable Sentry error tracking (only in production, not on localhost) | `VITE_SENTRY_DSN=your-sentry-dsn`                 |
 | `CI`                        | Set to `true` for Continuous Integration environments               | `CI=true`                                         |
 | `GENERATE_SOURCEMAP`        | Disable source map generation during build                          | `GENERATE_SOURCEMAP=false`                        |
-| `VITE_LENDASAT_IFRAME_URL`  | Overwrite the default LendaSat URL                                  | `VITE_LENDASAT_IFRAME_URL=http://localhost:5173`  |
-| `VITE_LENDASWAP_IFRAME_URL` | Overwrite the default LendaSwap URL                                 | `VITE_LENDASWAP_IFRAME_URL=http://localhost:5174` |
-| `VITE_UTXO_MAX_AMOUNT`.     | Overwrite the server's utxoMaxAmount                                | `VITE_UTXO_MAX_AMOUNT=-1`                         |
-| `VITE_UTXO_MIN_AMOUNT`.     | Overwrite the server's utxoMinAmount                                | `VITE_UTXO_MIN_AMOUNT=330`                        |
-| `VITE_VTXO_MAX_AMOUNT`.     | Overwrite the server's vtxoMaxAmount                                | `VITE_VTXO_MAX_AMOUNT=-1`                         |
-| `VITE_VTXO_MIN_AMOUNT`.     | Overwrite the server's vtxoMinAmount                                | `VITE_VTXO_MIN_AMOUNT=330`                        |
 
-## Getting Started
+## 🔮 Future Plans
 
-### Prerequisites
+- 🟣 RGB protocol integration (R&D)
+- 🟣 Custom Nostr client with native Arkade support
+- 🟣 Enhanced purple theming
+- 🟣 Community-driven features
 
-- Node.js >=20
-- PNPM >=8
+## 🤝 Contributing
 
-### Installation
+Contributions welcome! This is a research & development fork exploring:
+- Nostr + Arkade integration
+- RGB protocol on Arkade
+- Non-Lightning zap alternatives
 
-Install dependencies
+## 📄 License
 
-```bash
-pnpm install
-```
+MIT License
 
-## Development
+## 🙏 Credits
 
-### `pnpm run start`
+- Original [Arkade Wallet](https://github.com/arkade-os/wallet) by Arkade Labs
+- Nostr protocol by Nostr community
+- NIP-47 specification
+- Testing with [jumble](https://jumble.social)
 
-Runs the app in the development mode.\
-Open [http://localhost:3002](http://localhost:3002) to view it in the browser.
+## 📞 Contact
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- GitHub: [@PePeRGB20](https://github.com/PePeRGB20)
+- Repository: https://github.com/PePeRGB20/ArkaneWalletNWC
 
-### `pnpm run build`
+---
 
-Builds the app for production to the `dist` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**💜 Made for the Nostr ecosystem 💜**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-### `pnpm run regtest`
-
-Starts the regtest environment and sets up the arkd instance. Requires Docker to be installed and [Nigiri](https://nigiri.vulpem.com/) to be running.
-
-### e2e tests
-
-> note: e2e tests require a regtest environment to be running.
-> `pnpm run regtest` to start and setup the regtest environment.
-
-> note: e2e tests use playwright for ui testing, you may need to run
-> `pnpm exec playwright install` once to download new browsers.
-
-Run the tests with:
-
-```bash
-pnpm run test:e2e
-```
-
-Run the tests in interactive mode with:
-
-```bash
-pnpm run test:e2e --ui
-```
-
-Access the playwright code generator tool with:
-
-```bash
-pnpm run test:codegen
-```
+*Purple Arkade Wallet - Bitcoin on Nostr, the way it should be.*

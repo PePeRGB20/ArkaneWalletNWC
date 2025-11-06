@@ -1,6 +1,7 @@
 {
-  "name": "arkade",
-  "version": "0.1.0",
+  "name": "purple-arkade-wallet",
+  "version": "1.0.0",
+  "description": "Purple Arkade Wallet - Bitcoin on Nostr with native Arkade Zaps (NWC)",
   "private": true,
   "homepage": ".",
   "dependencies": {
